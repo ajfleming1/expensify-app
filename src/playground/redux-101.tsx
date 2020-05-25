@@ -28,17 +28,47 @@ interface SetAction {
   count: number
 };
 
+type AdjustByType = {
+  value: number;
+}
+
+// Action generators - functions that return action objects.
+const incrementCount = ({ value }: AdjustByType = { value: 1 }): IncrementAction => (
+  {
+    type: INCREMENT,
+    incrementBy: value
+  }
+);
+
+const decrementCount = ({ value }: AdjustByType = { value: 1 }): DecrementAction => (
+  {
+    type: DECREMENT,
+    decrementBy: value
+  }
+);
+
+const resetCount = (): ResetAction => (
+  {
+    type: RESET
+  }
+);
+
+const setCount = ({ value }: AdjustByType): SetAction => (
+  {
+    type: "SET",
+    count: value
+  }
+);
+
 const store = createStore((state: state = { count: 0 }, action: ActionTypes) => {
   switch (action.type) {
     case INCREMENT:
-      const incrementBy = typeof action.incrementBy === 'number' ? action.incrementBy : 1;
       return {
-        count: state.count + incrementBy
+        count: state.count + action.incrementBy
       };
     case DECREMENT:
-      const decrementBy = typeof action.decrementBy === 'number' ? action.decrementBy : 1;
       return {
-        count: state.count - decrementBy
+        count: state.count - action.decrementBy
       };
     case SET: {
       return {
@@ -60,29 +90,19 @@ const unsubscribe = store.subscribe(() => {
 
 // Action - an object that gets sent to the store.
 // I'd like to increment the count.
-store.dispatch({
-  type: "INCREMENT",
-  incrementBy: 5
-});
+// store.dispatch({
+//   type: "INCREMENT",
+//   incrementBy: 5
+// });
 
-store.dispatch({
-  type: "INCREMENT"
-});
+store.dispatch(incrementCount({ value: 5 }));
 
-store.dispatch({
-  type: "RESET"
-});
+store.dispatch(incrementCount());
 
-store.dispatch({
-  type: "DECREMENT"
-});
+store.dispatch(resetCount());
 
-store.dispatch({
-  type: "DECREMENT",
-  decrementBy: 10
-});
+store.dispatch(decrementCount());
 
-store.dispatch({
-  type: SET,
-  count: 101
-});
+store.dispatch(decrementCount({ value: 10 }));
+
+store.dispatch(setCount({ value: 101 }));
