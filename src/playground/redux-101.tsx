@@ -4,8 +4,7 @@ const DECREMENT = "DECREMENT";
 const RESET = "RESET";
 const SET = "SET";
 type ActionTypes = IncrementAction | DecrementAction | ResetAction | SetAction;
-
-type state = {
+type StateType = {
   count: number
 };
 
@@ -60,7 +59,11 @@ const setCount = ({ value }: AdjustByType): SetAction => (
   }
 );
 
-const store = createStore((state: state = { count: 0 }, action: ActionTypes) => {
+// Reducer
+// 1. Reducers are pure functions
+// 1.1 (Not just a function - output is only determined by input, nothing is changed outside the reducer).
+// 2. Never change state or action arguments.
+const countReducer = (state: StateType = { count: 0 }, action: ActionTypes): StateType => {
   switch (action.type) {
     case INCREMENT:
       return {
@@ -82,7 +85,9 @@ const store = createStore((state: state = { count: 0 }, action: ActionTypes) => 
     default:
       return state;
   }
-});
+};
+
+const store = createStore(countReducer);
 
 const unsubscribe = store.subscribe(() => {
   console.log(store.getState());

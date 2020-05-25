@@ -2,7 +2,7 @@ const path = require("path");
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-    entry: './src/playground/redux-101.tsx',
+    entry: './src/playground/redux-expensify.tsx',
     output: {
       filename: 'main.js',
       path: path.resolve(__dirname, 'dist'),
