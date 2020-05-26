@@ -1,6 +1,6 @@
-export default {};
+// export default {};
 
-// Object Destructuring 
+// // Object Destructuring 
 // type PersonType = {
 //     name?: string,
 //     age: number,
@@ -47,11 +47,11 @@ export default {};
 // const {name: publisherName = "Self Published" } = book.publisher
 // console.log(publisherName);
 
-// Array Destructuring 
+// // Array Destructuring 
 // const address = ['123 Fake St', 'Salem', 'Virginia', '24201'];
-// const [, city, state = "New York"] = address;
-// console.log(`You are in ${city}, ${state}.`);
+// const [, cty, state = "New York"] = address;
+// console.log(`You are in ${cty}, ${state}.`);
 
-const item = ["Coffee (iced)", "$3.00", "$3.50", "$3.75"];
-const [itemName, ,mediumPrice] = item;
-console.log(`A medium ${itemName} costs ${mediumPrice}`);
+// const item = ["Coffee (iced)", "$3.00", "$3.50", "$3.75"];
+// const [itemName, ,mediumPrice] = item;
+// console.log(`A medium ${itemName} costs ${mediumPrice}`);
