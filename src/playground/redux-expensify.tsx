@@ -2,8 +2,8 @@ import { createStore, combineReducers } from "redux";
 import { v4 as uuidv4 } from 'uuid';
 // Types
 type ExpenseActionTypes = AddExpenseAction | RemoveExpenseAction | EditExpenseAction;
-type FilterActionTypes = SetTextFilterAction | SortByDateFilterAction | SortByAmountFilterAction | 
-                         SetStartDateFilterAction | SetEndDateFilterAction;
+type FilterActionTypes = SetTextFilterAction | SortByDateFilterAction | SortByAmountFilterAction |
+  SetStartDateFilterAction | SetEndDateFilterAction;
 type ExepenseItemType = {
   id: string,
   description: string,
@@ -12,7 +12,7 @@ type ExepenseItemType = {
   createdAt: number
 };
 
-type FiltersStateType = {
+type FiltersType = {
   text: string,
   sortBy: "amount" | "date",
   startDate: number,
@@ -63,7 +63,7 @@ type SortByAmountFilterAction = {
   type: typeof SORT_BY_AMOUNT
 };
 type SetStartDateFilterAction = {
-  type: typeof SET_START_DATE, 
+  type: typeof SET_START_DATE,
   startDate: number
 }
 type SetEndDateFilterAction = {
@@ -73,7 +73,7 @@ type SetEndDateFilterAction = {
 
 // Default States
 const expensesDefaultState = [] as ExepenseItemType[];
-const filtersDefaultState: FiltersStateType =
+const filtersDefaultState: FiltersType =
 {
   text: "",
   sortBy: "date",
@@ -165,7 +165,7 @@ const expensesReducer = (state: ExepenseItemType[] = expensesDefaultState, actio
 };
 
 // Filters Reducer
-const filtersReducers = (state: FiltersStateType = filtersDefaultState, action: FilterActionTypes): FiltersStateType => {
+const filtersReducers = (state: FiltersType = filtersDefaultState, action: FilterActionTypes): FiltersType => {
   switch (action.type) {
     case SET_TEXT_FILTER:
       return {
@@ -200,6 +200,20 @@ const filtersReducers = (state: FiltersStateType = filtersDefaultState, action: 
   }
 };
 
+// Timestamp - any positive or negative integer value - counted in ms. 33400, -10, -3
+// Timestamp 0 - Jan 1st 12:00 AM 1970. Unix Epoch
+// Get Visible Expenses
+const getVisibleExpenses = (expenses: ExepenseItemType[], { text, sortBy, startDate, endDate }: FiltersType): ExepenseItemType[] => {
+  
+  return expenses.filter((expense: ExepenseItemType) => {
+    const startDateMatch: boolean = typeof startDate !== 'number' || expense.createdAt >= startDate;
+    const endDateMatch: boolean = typeof endDate !== 'number' || expense.createdAt <= endDate;
+    const textMatch: boolean = expense.description.toLowerCase().trim().includes(text.toLowerCase().trim());
+
+    return startDateMatch && endDateMatch && textMatch;
+  });
+}
+
 // Combine Reducers
 const store = createStore(
   combineReducers(
@@ -211,40 +225,44 @@ const store = createStore(
 
 // Mutate store
 store.subscribe(() => {
-  console.log(store.getState())
+  const state = store.getState();
+  const visibleExpenses = getVisibleExpenses(state.expenses, state.filters);
+  console.log(visibleExpenses)
 });
 
 const expenseOne = store.dispatch(addExpense({
   description: "Rent",
-  amount: 100
+  amount: 100,
+  createdAt: 1000
 }));
 
 const expenseTwo = store.dispatch(addExpense({
   description: "Coffee",
-  amount: 300
+  amount: 300,
+  createdAt: -1000
 }));
 
-console.log(expenseOne);
-store.dispatch(removeExpense({
-  id: expenseOne.expense.id
-}));
+// console.log(expenseOne);
+// store.dispatch(removeExpense({
+//   id: expenseOne.expense.id
+// }));
 
-store.dispatch(editExpense({
-  id: expenseTwo.expense.id,
-  updates: {
-    amount: 500
-  }
-}));
+// store.dispatch(editExpense({
+//   id: expenseTwo.expense.id,
+//   updates: {
+//     amount: 500
+//   }
+// }));
 
 store.dispatch(setTextFilter("rent"));
-store.dispatch(setTextFilter());
+// store.dispatch(setTextFilter());
 
-store.dispatch(sortByAmount());
-store.dispatch(sortByDate());
+// store.dispatch(sortByAmount());
+// store.dispatch(sortByDate());
 
-store.dispatch(setStartDate(125));
-store.dispatch(setStartDate());
-store.dispatch(setEndDate(1250));
+// store.dispatch(setStartDate(0));
+// store.dispatch(setStartDate());
+// store.dispatch(setEndDate(1000));
 
 // const demoState = {
 //   expenses: [{
