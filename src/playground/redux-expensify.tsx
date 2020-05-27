@@ -2,7 +2,8 @@ import { createStore, combineReducers } from "redux";
 import { v4 as uuidv4 } from 'uuid';
 // Types
 type ExpenseActionTypes = AddExpenseAction | RemoveExpenseAction | EditExpenseAction;
-type FilterActionTypes = SetTextFilterAction;
+type FilterActionTypes = SetTextFilterAction | SortByDateFilterAction | SortByAmountFilterAction | 
+                         SetStartDateFilterAction | SetEndDateFilterAction;
 type ExepenseItemType = {
   id: string,
   description: string,
@@ -14,22 +15,21 @@ type ExepenseItemType = {
 type FiltersStateType = {
   text: string,
   sortBy: "amount" | "date",
-  startDate: Date,
-  endDate: Date
+  startDate: number,
+  endDate: number
 };
 
 type UpdateExpenseType = {
-  description?: string, 
-  amount?: number, 
-  notes?: string, 
+  description?: string,
+  amount?: number,
+  notes?: string,
   createdAt?: number
 }
 
-// Action Types
+// Expense Action Types
 const ADD_EXPENSE = "ADD_EXPENSE";
 const REMOVE_EXPENSE = "REMOVE_EXPENSE";
 const EDIT_EXPENSE = "EDIT_EXPENSE";
-const SET_TEXT_FILTER = "SET_TEXT_FILTER";
 type AddExpenseAction = {
   type: typeof ADD_EXPENSE,
   expense: ExepenseItemType
@@ -46,11 +46,30 @@ type EditExpenseAction = {
   updates: UpdateExpenseType
 };
 
+// Filter Action Types
+const SET_TEXT_FILTER = "SET_TEXT_FILTER";
+const SORT_BY_DATE = "SORT_BY_DATE";
+const SORT_BY_AMOUNT = "SORT_BY_AMOUNT";
+const SET_START_DATE = "SET_START_DATE";
+const SET_END_DATE = "SET_END_DATE";
 type SetTextFilterAction = {
   type: typeof SET_TEXT_FILTER,
   text: string
 };
-
+type SortByDateFilterAction = {
+  type: typeof SORT_BY_DATE
+};
+type SortByAmountFilterAction = {
+  type: typeof SORT_BY_AMOUNT
+};
+type SetStartDateFilterAction = {
+  type: typeof SET_START_DATE, 
+  startDate: number
+}
+type SetEndDateFilterAction = {
+  type: typeof SET_END_DATE,
+  endDate: number
+}
 
 // Default States
 const expensesDefaultState = [] as ExepenseItemType[];
@@ -86,14 +105,14 @@ const removeExpense = ({ id }: { id: string }): RemoveExpenseAction => (
 );
 
 // EDIT_EXPENSE
-const editExpense = ( {id, updates}: 
-  {id: string, updates: UpdateExpenseType}): EditExpenseAction => (
-  {
-    type: EDIT_EXPENSE,
-    id,
-    updates
-  }
-);
+const editExpense = ({ id, updates }:
+  { id: string, updates: UpdateExpenseType }): EditExpenseAction => (
+    {
+      type: EDIT_EXPENSE,
+      id,
+      updates
+    }
+  );
 
 // SET_TEXT_FILTER
 const setTextFilter = (text: string = ""): SetTextFilterAction => ({
@@ -102,9 +121,26 @@ const setTextFilter = (text: string = ""): SetTextFilterAction => ({
 });
 
 // SORT_BY_DATE
+const sortByDate = (): SortByDateFilterAction => ({
+  type: SORT_BY_DATE
+});
+
 // SORT_BY_AMOUNT
+const sortByAmount = (): SortByAmountFilterAction => ({
+  type: SORT_BY_AMOUNT
+});
+
 // SET_START_DATE
+const setStartDate = (startDate: number = undefined): SetStartDateFilterAction => ({
+  type: SET_START_DATE,
+  startDate
+});
+
 // SET_END_DATE
+const setEndDate = (endDate: number = undefined): SetEndDateFilterAction => ({
+  type: SET_END_DATE,
+  endDate
+});
 
 // Expenses Reducer
 const expensesReducer = (state: ExepenseItemType[] = expensesDefaultState, action: ExpenseActionTypes): ExepenseItemType[] => {
@@ -115,7 +151,7 @@ const expensesReducer = (state: ExepenseItemType[] = expensesDefaultState, actio
       return state.filter(({ id }) => id !== action.id)
     case EDIT_EXPENSE:
       return state.map((expense) => {
-        if(expense.id === action.id){
+        if (expense.id === action.id) {
           return {
             ...expense,
             ...action.updates
@@ -131,11 +167,35 @@ const expensesReducer = (state: ExepenseItemType[] = expensesDefaultState, actio
 // Filters Reducer
 const filtersReducers = (state: FiltersStateType = filtersDefaultState, action: FilterActionTypes): FiltersStateType => {
   switch (action.type) {
-    case SET_TEXT_FILTER: 
+    case SET_TEXT_FILTER:
       return {
         ...state,
         text: action.text
       }
+    case SORT_BY_DATE: {
+      return {
+        ...state,
+        sortBy: "date"
+      }
+    }
+    case SORT_BY_AMOUNT: {
+      return {
+        ...state,
+        sortBy: "amount"
+      }
+    }
+    case SET_START_DATE: {
+      return {
+        ...state,
+        startDate: action.startDate
+      }
+    }
+    case SET_END_DATE: {
+      return {
+        ...state,
+        endDate: action.endDate
+      }
+    }
     default: return state;
   }
 };
@@ -178,6 +238,14 @@ store.dispatch(editExpense({
 
 store.dispatch(setTextFilter("rent"));
 store.dispatch(setTextFilter());
+
+store.dispatch(sortByAmount());
+store.dispatch(sortByDate());
+
+store.dispatch(setStartDate(125));
+store.dispatch(setStartDate());
+store.dispatch(setEndDate(1250));
+
 // const demoState = {
 //   expenses: [{
 //     id: "abcd",
@@ -194,13 +262,19 @@ store.dispatch(setTextFilter());
 //   }
 // };
 
+// Object Spread
 // const user = {
 //   name: "Jen",
 //   age: 24
 // };
 
 // console.log({
-//   age: 27,
 //   ...user,
-//   location: "Bristol"
+//   location: "Bristol",
+//   age: 27
 // });
+
+// Array Spread
+// const names = ["Drew", "Fleming"];
+// const newNames = [...names, "Interesting"];
+// console.log(newNames);
