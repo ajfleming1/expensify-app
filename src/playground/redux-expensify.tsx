@@ -281,8 +281,8 @@ store.dispatch(sortByAmount());
 //   filters: {
 //     text: "rent",
 //     sortBy: "amount" as "amount" | "date",
-//     startDate: undefined as Date,
-//     endDate: undefined as Date
+//     startDate: undefined as number,
+//     endDate: undefined as number
 //   }
 // };
 
