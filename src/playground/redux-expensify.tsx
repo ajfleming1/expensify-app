@@ -204,13 +204,19 @@ const filtersReducers = (state: FiltersType = filtersDefaultState, action: Filte
 // Timestamp 0 - Jan 1st 12:00 AM 1970. Unix Epoch
 // Get Visible Expenses
 const getVisibleExpenses = (expenses: ExepenseItemType[], { text, sortBy, startDate, endDate }: FiltersType): ExepenseItemType[] => {
-  
   return expenses.filter((expense: ExepenseItemType) => {
     const startDateMatch: boolean = typeof startDate !== 'number' || expense.createdAt >= startDate;
     const endDateMatch: boolean = typeof endDate !== 'number' || expense.createdAt <= endDate;
     const textMatch: boolean = expense.description.toLowerCase().trim().includes(text.toLowerCase().trim());
 
     return startDateMatch && endDateMatch && textMatch;
+  }).sort((a: ExepenseItemType, b: ExepenseItemType) => {
+    if (sortBy === "date") {
+      return a.createdAt < b.createdAt ? 1 : -1;
+    }
+    else if(sortBy === "amount" ){
+      return a.amount < b.amount ? 1 : -1;
+    }
   });
 }
 
@@ -233,7 +239,7 @@ store.subscribe(() => {
 const expenseOne = store.dispatch(addExpense({
   description: "Rent",
   amount: 100,
-  createdAt: 1000
+  createdAt: -21000
 }));
 
 const expenseTwo = store.dispatch(addExpense({
@@ -254,10 +260,10 @@ const expenseTwo = store.dispatch(addExpense({
 //   }
 // }));
 
-store.dispatch(setTextFilter("rent"));
+// store.dispatch(setTextFilter("rent"));
 // store.dispatch(setTextFilter());
 
-// store.dispatch(sortByAmount());
+store.dispatch(sortByAmount());
 // store.dispatch(sortByDate());
 
 // store.dispatch(setStartDate(0));
