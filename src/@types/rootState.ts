@@ -10,7 +10,8 @@ type RootState = {
 export type Props = ConnectedProps<typeof connector>;
 const mapStateToProps = (state: RootState) => (
   {
-    expenses: selectExpenses(state.expenses, state.filters)
+    expenses: selectExpenses(state.expenses, state.filters),
+    filters: state.filters
   }
 );
 
