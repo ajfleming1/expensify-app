@@ -11,7 +11,7 @@ export type ExepenseItemType = {
 export type UpdateExpenseType = {
   description?: string;
   amount?: number;
-  notes?: string;
+  note?: string;
   createdAt?: number;
 };
 
