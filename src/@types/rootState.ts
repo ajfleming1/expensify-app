@@ -3,7 +3,7 @@ import { FiltersType } from "./filterTypes";
 import { ConnectedProps, connect } from "react-redux";
 import selectExpenses from "../selectors/expenses";
 import { History, LocationState } from "history";
-type RootState = {
+export type RootState = {
   expenses: ExepenseItemType[],
   filters: FiltersType,
   history: History<LocationState>

@@ -14,7 +14,7 @@ export default (state: ExepenseItemType[] = expensesDefaultState, action: Expens
         if (expense.id === action.id) {
           return {
             ...expense,
-            ...action.updates
+            ...action.updates,
           }
         } else {
           return expense;

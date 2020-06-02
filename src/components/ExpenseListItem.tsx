@@ -1,22 +1,17 @@
 import React from "react";
 import { ExepenseItemType } from "../@types/expenseTypes";
-import { DispatchProp, connect } from "react-redux";
-import { AnyAction } from "redux";
-import { removeExpense } from "../actions/expenses";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 
-const ExpenseListItem = (
-  { dispatch, id, description, amount, createdAt }
-    : ExepenseItemType & DispatchProp<AnyAction>) => (
-    <div>
-      <h3>{description}</h3>
-      <p>{amount} - {createdAt}</p>
-      <button onClick=
-        {
-          (e) => {
-            dispatch(removeExpense({ id: id }))
-          }
-        }>Remove</button>
-    </div>
-  );
+const ExpenseListItem = ({ id, description, amount, createdAt }: ExepenseItemType) => (
+  <div>
+    <Link to={`/edit/${id}`}>
+      <h3>
+        {description}
+      </h3>
+    </Link>
+    <p>{amount} - {createdAt}</p>
+  </div>
+);
 
 export default connect()(ExpenseListItem);
