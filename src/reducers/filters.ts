@@ -1,12 +1,12 @@
 import { SET_TEXT_FILTER, SORT_BY_DATE, SORT_BY_AMOUNT, 
          SET_START_DATE, SET_END_DATE, FiltersType, FilterActionTypes } from "../@types/filterTypes";
-
+import moment from "moment";
 const filtersDefaultState: FiltersType =
 {
   text: "",
   sortBy: "date",
-  startDate: undefined,
-  endDate: undefined
+  startDate: moment().startOf("month"),
+  endDate: moment().endOf("month")
 };
 
 // Filters Reducer

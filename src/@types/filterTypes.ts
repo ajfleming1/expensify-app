@@ -1,3 +1,5 @@
+import { Moment } from "moment";
+
 // Filter Action Types
 export const SET_TEXT_FILTER = "SET_TEXT_FILTER";
 export const SORT_BY_DATE = "SORT_BY_DATE";
@@ -16,19 +18,19 @@ export type SortByAmountFilterAction = {
 };
 export type SetStartDateFilterAction = {
   type: typeof SET_START_DATE,
-  startDate: number
+  startDate: Moment
 };
 export type SetEndDateFilterAction = {
   type: typeof SET_END_DATE,
-  endDate: number
+  endDate: Moment
 };
 
 // FiltersType
 export type FiltersType = {
   text: string,
   sortBy: "amount" | "date",
-  startDate: number,
-  endDate: number
+  startDate: Moment,
+  endDate: Moment
 };
 
 // FilterActionTypes
