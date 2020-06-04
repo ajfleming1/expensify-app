@@ -4,26 +4,30 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --config ./jest.config.js",
     "start": "webpack-dev-server --open"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/jest": "^25.2.3",
     "@types/react": "^16.9.34",
+    "@types/react-dates": "^17.1.12",
     "@types/react-dom": "^16.9.6",
     "@types/react-modal": "^3.10.5",
+    "@types/react-redux": "^7.1.9",
     "@types/react-router-dom": "^5.1.5",
     "@types/uuid": "^8.0.0",
-    "@types/react-dates": "^17.1.12",
-    "@types/react-redux": "^7.1.9",
     "css-loader": "^3.5.3",
     "html-webpack-plugin": "^4.3.0",
+    "jest": "^26.0.1",
     "node-sass": "^4.14.1",
+    "redux-devtools-extension": "^2.13.8",
     "sass-loader": "^8.0.2",
     "source-map-loader": "^0.2.4",
     "style-loader": "^1.2.1",
+    "ts-jest": "^26.1.0",
     "ts-loader": "^7.0.1",
     "typescript": "^3.8.3",
     "webpack": "^4.43.0",
@@ -40,7 +44,6 @@
     "react-redux": "^7.2.0",
     "react-router-dom": "^5.2.0",
     "redux": "^4.0.5",
-    "redux-devtools-extension": "^2.13.8",
     "uuid": "^8.1.0"
   }
 }
