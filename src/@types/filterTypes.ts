@@ -35,4 +35,4 @@ export type FiltersType = {
 
 // FilterActionTypes
 export type FilterActionTypes = SetTextFilterAction | SortByDateFilterAction | SortByAmountFilterAction |
-  SetStartDateFilterAction | SetEndDateFilterAction;
+  SetStartDateFilterAction | SetEndDateFilterAction | { type: "@@INIT" };
