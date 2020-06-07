@@ -17,7 +17,7 @@ export type UpdateExpenseType = {
 
 // Actions
 // Action Types
-export type ExpenseActionTypes = AddExpenseAction | RemoveExpenseAction | EditExpenseAction;
+export type ExpenseActionTypes = AddExpenseAction | RemoveExpenseAction | EditExpenseAction | InitActionType;
 
 // ADD_EXPENSE
 export const ADD_EXPENSE = "ADD_EXPENSE";
@@ -40,3 +40,7 @@ export type EditExpenseAction = {
   id: string;
   updates: UpdateExpenseType;
 };
+
+type InitActionType = {
+  type: "@@INIT"
+}
