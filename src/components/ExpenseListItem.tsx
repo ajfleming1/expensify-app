@@ -3,7 +3,7 @@ import { ExepenseItemType } from "../@types/expenseTypes";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
-const ExpenseListItem = ({ id, description, amount, createdAt }: ExepenseItemType) => (
+export const ExpenseListItem = ({ id, description, amount, createdAt }: ExepenseItemType) => (
   <div>
     <Link to={`/edit/${id}`}>
       <h3>
