@@ -3,8 +3,8 @@ import moment, { Moment } from "moment";
 import { SingleDatePicker } from "react-dates";
 import { v4 as uuid } from 'uuid';
 import 'react-dates/initialize';
-import "react-dates/lib/css/_datepicker.css";
 import { UpdateExpenseType, ExepenseItemType } from "../@types/expenseTypes";
+
 class ExpenseForm extends React.Component<{ expense?: ExepenseItemType, onSubmit: (expense: UpdateExpenseType) => void }> {
   state = {} as {
     description: string,
