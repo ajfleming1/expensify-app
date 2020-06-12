@@ -10,14 +10,3 @@ exports[`should render NotFoundPage correctly 1`] = `
   </Link>
 </div>
 `;
-
-exports[`should render not found page 1`] = `
-<div>
-  404! - 
-  <Link
-    to="/"
-  >
-    Go Home
-  </Link>
-</div>
-`;
