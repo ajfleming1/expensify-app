@@ -50,7 +50,7 @@ class ExpenseForm extends React.Component<{ expense?: ExepenseItemType, onSubmit
     }
   };
 
-  onFocusChange = ({ focused }: any) => {
+  onFocusChange = ({ focused }: { focused: boolean }) => {
     this.setState(() => ({ calendarFocused: focused }));
   };
 
