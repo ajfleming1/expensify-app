@@ -7,15 +7,15 @@ import { getMockRouterProps } from "../__mocks__/getMockRouterProps";
 import { UpdateExpenseType } from "../../@types/expenseTypes";
 
 const routerProps = getMockRouterProps<AddExpensePage>(null);
-let onSubmit: (expense: UpdateExpenseType) => void;
+let addExpense: (expense: UpdateExpenseType) => void;
 let wrapper: ShallowWrapper<any, Readonly<{}>, Component<{}, {}, any>>;
 beforeEach(() => {
-  onSubmit = jest.fn();
+  addExpense = jest.fn();
   wrapper = shallow(<AddExpensePage
     expenses={undefined}
     dispatch={undefined}
     filters={undefined}
-    onSubmit={onSubmit}
+    addExpense={addExpense}
     history={routerProps.history} />);
 });
 
@@ -26,5 +26,5 @@ test("should render add expense page correctly", () => {
 test("should handle onSumbit", () => {
   wrapper.find(ExpenseForm).prop("onSubmit")(expenses[1]);
   expect(routerProps.history.push).toHaveBeenLastCalledWith("/");
-  expect(onSubmit).toHaveBeenLastCalledWith(expenses[1]);
+  expect(addExpense).toHaveBeenLastCalledWith(expenses[1]);
 });

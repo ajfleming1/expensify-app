@@ -1,38 +1,58 @@
-import React from "react";
+import React, { Dispatch } from "react";
 import { RouteComponentProps } from "react-router-dom";
 import { RootState } from "../@types/rootState";
-import { ExepenseItemType, EditExpenseAction, RemoveExpenseAction } from "../@types/expenseTypes";
+import { ExepenseItemType, EditExpenseAction, RemoveExpenseAction, UpdateExpenseType } from "../@types/expenseTypes";
 import { connect } from "react-redux";
 import ExpenseForm from "./ExpenseForm";
-import { editExpense, removeExpense } from "../actions/expenses";
+import { editExpense, removeExpense, addExpense } from "../actions/expenses";
 import { withRouter } from "react-router-dom";
+import { History, LocationState } from "history";
 type IdParams = { id: string, expense: string };
 
-const EditExpensePage = (props: {
+// Refactor EditExpensePage to be class component.
+// Set up mapDispatchToProps editExpense and removeExpense
+
+// should render EditExpensePage - snapshot
+// should handle editExpense - spies
+// should handle removeExpese - spies
+
+export class EditExpensePage extends React.Component<{
   expense: ExepenseItemType;
-  dispatch: (action: EditExpenseAction | RemoveExpenseAction) => void;
-  history: string[];
-}) => {
-  return (
-    <div>
-      <ExpenseForm
-        expense={props.expense}
-        onSubmit={(expense: ExepenseItemType) => {
-          // Dispatch the action to edit the expense
-          // Redirect to the dashboard
-          props.dispatch(editExpense({ id: props.expense.id, updates: expense }));
-          props.history.push("/");
-        }}
-      />
-      <button onClick={
-        (e) => {
-          props.dispatch(removeExpense({ id: props.expense.id }));
-          props.history.push("/");
-        }
-      }>Remove</button>
-    </div>
-  );
+  history: History<LocationState>;
+} & DispatchProps> {
+  onSubmit = (expense: ExepenseItemType) => {
+    // Dispatch the action to edit the expense
+    // Redirect to the dashboard
+    this.props.editExpense({ id: this.props.expense.id, updates: expense });
+    this.props.history.push("/");
+  };
+  removeExpense = (e: any) => {
+    this.props.removeExpense({ id: this.props.expense.id });
+    this.props.history.push("/");
+  }
+
+  render() {
+    return (
+      <div>
+        <ExpenseForm
+          expense={this.props.expense}
+          onSubmit={this.onSubmit}
+        />
+        <button onClick={this.removeExpense}>Remove</button>
+      </div>
+    );
+  }
 };
+
+interface DispatchProps {
+  editExpense({ id, updates }: { id: string; updates: UpdateExpenseType; }): EditExpenseAction,
+  removeExpense({ id }: { id: string }): RemoveExpenseAction
+}
+
+const mapDispatchToProps = (dispatch: (arg0: { type: "EDIT_EXPENSE" | "REMOVE_EXPENSE"; id: string; updates?: UpdateExpenseType; }) => any) => ({
+  editExpense: ({ id, updates }: { id: string; updates: UpdateExpenseType; }) => dispatch(editExpense({ id, updates })),
+  removeExpense: ({id} : {id: string}) => dispatch(removeExpense({ id }))
+});
 
 const mapStateToProps = (state: RootState, props: RouteComponentProps<IdParams>) => (
   {
@@ -40,4 +60,4 @@ const mapStateToProps = (state: RootState, props: RouteComponentProps<IdParams>)
   }
 );
 
-export default withRouter(connect(mapStateToProps)(EditExpensePage));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(EditExpensePage));

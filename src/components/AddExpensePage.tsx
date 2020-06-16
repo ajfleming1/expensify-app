@@ -8,7 +8,7 @@ import { Dispatch } from "redux";
 
 export class AddExpensePage extends React.Component<Props & DispatchProps> {
   onSubmit = (expense: UpdateExpenseType) => {
-    this.props.onSubmit(expense);
+    this.props.addExpense(expense);
     this.props.history.push("/");
   };
 
@@ -25,11 +25,11 @@ export class AddExpensePage extends React.Component<Props & DispatchProps> {
 }
 
 interface DispatchProps {
-  onSubmit: (expense: UpdateExpenseType) => void
+  addExpense: (expense: UpdateExpenseType) => void
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  onSubmit: (expense: UpdateExpenseType) => dispatch(addExpense(expense))
+  addExpense: (expense: UpdateExpenseType) => dispatch(addExpense(expense))
 });
 
 export default connect(undefined, mapDispatchToProps)(AddExpensePage);
