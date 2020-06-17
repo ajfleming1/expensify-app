@@ -1,37 +1,42 @@
 import React from "react";
-import { Props, connector } from "../@types/rootState";
 import { v4 as uuidv4 } from 'uuid';
-import { setTextFilter, sortByDate, sortByAmount, setStartDate, setEndDate } from "../actions/filters";
 import { DateRangePicker, FocusedInputShape } from "react-dates";
 import { Moment } from "moment";
+import { Props, connector } from "../@types/rootState";
 
-class ExpenseListFilters extends React.Component<Props> {
+export class ExpenseListFilters extends React.Component<Props> {
   state = {
     calenderFocused: null as FocusedInputShape
   };
 
   onDatesChange = ({ startDate, endDate }: { startDate: Moment, endDate: Moment }) => {
-    this.props.dispatch(setStartDate(startDate));
-    this.props.dispatch(setEndDate(endDate));
+    this.props.setStartDate(startDate);
+    this.props.setEndDate(endDate);
   };
 
   onFocusChange = (calenderFocused: FocusedInputShape) => {
     this.setState({ calenderFocused });
   }
 
+  onTextChange = (e: any) => {
+    this.props.setTextFilter(e.target.value);
+  };
+
+  onSortChange = (e: any) => {
+    e.target.value === "date" ?
+      this.props.sortByDate() :
+      this.props.sortByAmount()
+  };
+
   render() {
     return (
       <div>
         <input type="text"
           value={this.props.filters.text}
-          onChange={(e) => this.props.dispatch(setTextFilter(e.target.value))}
+          onChange={this.onTextChange}
         />
         <select value={this.props.filters.sortBy}
-          onChange={
-            (e) => e.target.value === "date" ?
-              this.props.dispatch(sortByDate()) :
-              this.props.dispatch(sortByAmount())
-          }>
+          onChange={this.onSortChange}>
           <option value="date">Date</option>
           <option value="amount">Amount</option>
         </select>
@@ -52,6 +57,6 @@ class ExpenseListFilters extends React.Component<Props> {
 
     );
   }
-}
+};
 
 export default connector(ExpenseListFilters);

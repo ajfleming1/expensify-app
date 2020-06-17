@@ -3,9 +3,10 @@ import { shallow, ShallowWrapper } from "enzyme";
 import { AddExpensePage } from "../../components/AddExpensePage";
 import ExpenseForm from "../../components/ExpenseForm";
 import expenses from "../fixtures/expenses";
-import { getMockRouterProps } from "../__mocks__/getMockRouterProps";
+import { getMockRouterProps, getMockDispatchProps } from "../__mocks__/getMockRouterProps";
 import { UpdateExpenseType } from "../../@types/expenseTypes";
 
+const mockDispatchProps = getMockDispatchProps(null);
 const routerProps = getMockRouterProps<AddExpensePage>(null);
 let addExpense: (expense: UpdateExpenseType) => void;
 let wrapper: ShallowWrapper<any, Readonly<{}>, Component<{}, {}, any>>;
@@ -13,10 +14,11 @@ beforeEach(() => {
   addExpense = jest.fn();
   wrapper = shallow(<AddExpensePage
     expenses={undefined}
-    dispatch={undefined}
     filters={undefined}
     addExpense={addExpense}
-    history={routerProps.history} />);
+    history={routerProps.history}
+    {...mockDispatchProps}
+  />);
 });
 
 test("should render add expense page correctly", () => {

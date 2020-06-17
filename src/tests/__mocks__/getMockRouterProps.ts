@@ -1,20 +1,20 @@
 import { RouteComponentProps } from 'react-router'
 import { match } from 'react-router-dom';
-import {UnregisterCallback, Href} from 'history'
+import { UnregisterCallback, Href } from 'history'
 
 //This is to mock out the dependencies for react router
 export function getMockRouterProps<P>(data: P) {
 
     var location: {
-            hash: "",
-            key: "",
-            pathname: "",
-            search: "",
-            state: {}
-        };
+        hash: "",
+        key: "",
+        pathname: "",
+        search: "",
+        state: {}
+    };
 
     var props: RouteComponentProps<P> = {
-    match: {
+        match: {
             isExact: true,
             params: data,
             path: "",
@@ -22,14 +22,14 @@ export function getMockRouterProps<P>(data: P) {
         },
         location: location,
         history: {
-            length:2,
-            action:"POP",
+            length: 2,
+            action: "POP",
             location: location,
             push: jest.fn(),
-            replace: () => {},
-            go: (num) => {},
-            goBack: () => {},
-            goForward: () => {},
+            replace: () => { },
+            go: (num) => { },
+            goBack: () => { },
+            goForward: () => { },
             block: (t) => {
                 var temp: UnregisterCallback = null;
                 return temp;
@@ -50,4 +50,14 @@ export function getMockRouterProps<P>(data: P) {
 
 
     return props;
+};
+
+export function getMockDispatchProps<P>(data: P) {
+    return {
+        setTextFilter: jest.fn(),
+        sortByDate: jest.fn(),
+        sortByAmount: jest.fn(),
+        setStartDate: jest.fn(),
+        setEndDate: jest.fn()
+    }
 }
