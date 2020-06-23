@@ -1,6 +1,3 @@
 node_modules
-dist/main.js
-dist/main.js.map
-dist/styles.css
-dist/styles.css.map
+public/dist/
 coverage

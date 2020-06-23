@@ -10,8 +10,7 @@ module.exports = (env) => {
     entry: './src/app.tsx',
     output: {
       filename: 'main.js',
-      path: path.resolve(__dirname, 'dist'),
-      publicPath: '/'
+      path: path.resolve(__dirname, 'public/dist')
     },
 
     mode: "development",
@@ -65,7 +64,7 @@ module.exports = (env) => {
     },
 
     plugins: [
-      new HtmlWebPackPlugin({ template: "./src/index.html", filename: "./index.html" }),
+      new HtmlWebPackPlugin({ template: "./src/index.html", filename: "../index.html" }),
       CSSExtract
     ],
 
@@ -79,7 +78,8 @@ module.exports = (env) => {
     },
 
     devServer: {
-      contentBase: './dist',
+      contentBase: path.join(__dirname, 'public'),
+      publicPath: "/dist/",
       compress: true,
       port: 9000,
       historyApiFallback: true
