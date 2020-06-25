@@ -2,6 +2,8 @@ import React from "react";
 import { ExepenseItemType } from "../@types/expenseTypes";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
+import moment from "moment";
+import numerial from "numeral";
 
 export const ExpenseListItem = ({ id, description, amount, createdAt }: ExepenseItemType) => (
   <div>
@@ -10,7 +12,11 @@ export const ExpenseListItem = ({ id, description, amount, createdAt }: Exepense
         {description}
       </h3>
     </Link>
-    <p>{amount} - {createdAt}</p>
+    <p>
+      {numerial(amount / 100).format("$0,0.00")}
+      -
+      {moment(createdAt).format("MMMM Do, YYYY")}
+    </p>
   </div>
 );
 
