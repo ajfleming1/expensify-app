@@ -13,7 +13,7 @@ const expenses: ExepenseItemType[] = [
       id: "2",
       description: "Rent",
       note: "",
-      amount: 195000,
+      amount: 109500,
       createdAt: moment(0).subtract(4, "days").valueOf()
     },
     {
