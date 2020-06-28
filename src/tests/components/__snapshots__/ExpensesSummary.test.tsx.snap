@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should have correct output for two items 1`] = `
+<div>
+  <h1>
+    Viewing 
+    1
+     
+    expense
+     totalling 
+    $1.95
+    .
+  </h1>
+</div>
+`;
+
+exports[`should have correct output for two items 2`] = `
+<div>
+  <h1>
+    Viewing 
+    10
+     
+    expenses
+     totalling 
+    $11,245.66
+    .
+  </h1>
+</div>
+`;
