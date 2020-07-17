@@ -1,12 +1,12 @@
-import { ExepenseItemType } from "./expenseTypes";
 import { FiltersType, SetTextFilterAction, SortByDateFilterAction, SortByAmountFilterAction, SetStartDateFilterAction, SetEndDateFilterAction } from "./filterTypes";
 import { ConnectedProps, connect } from "react-redux";
 import selectExpenses from "../selectors/expenses";
 import { History, LocationState } from "history";
 import { Moment } from "moment";
 import { setTextFilter, sortByDate, sortByAmount, setStartDate, setEndDate } from "../actions/filters";
+import { Expense } from "./expenseTypes";
 export type RootState = {
-  expenses: ExepenseItemType[],
+  expenses: Expense[],
   filters: FiltersType,
   history: History<LocationState>
 };

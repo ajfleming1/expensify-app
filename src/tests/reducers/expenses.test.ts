@@ -1,5 +1,5 @@
 import expensesReducer from "../../reducers/expenses";
-import { RemoveExpenseAction, REMOVE_EXPENSE, AddExpenseAction, ADD_EXPENSE, ExepenseItemType, EditExpenseAction, EDIT_EXPENSE, UpdateExpenseType } from "../../@types/expenseTypes";
+import { RemoveExpenseAction, REMOVE_EXPENSE, AddExpenseAction, ADD_EXPENSE, Expense, EditExpenseAction, EDIT_EXPENSE } from "../../@types/expenseTypes";
 import expenses from "../fixtures/expenses";
 
 test("should set default state", () => {
@@ -27,7 +27,7 @@ test("should not remove expenses if id not found", () => {
 
 
 test("should add an expense", () => {
-    const newExpense: ExepenseItemType = {
+    const newExpense: Expense = {
         amount: 10,
         createdAt: 10,
         description: "Lost my dime",
@@ -44,7 +44,7 @@ test("should add an expense", () => {
 });
 
 test("should edit an expense", () => {
-    var updates: UpdateExpenseType = {
+    var updates: Expense = {
         amount: expenses[0].amount + 1,
         createdAt: expenses[0].createdAt + 1,
         description: "New Description",
@@ -61,7 +61,7 @@ test("should edit an expense", () => {
 })
 
 test("shoud not edit an expense when id is not found", () => {
-    var updates: UpdateExpenseType = {
+    var updates: Expense = {
         amount: expenses[0].amount + 1,
         createdAt: expenses[0].createdAt + 1,
         description: "New Description",

@@ -6,22 +6,26 @@ import configureStore from "./store/configureStore";
 import { addExpense } from "./actions/expenses";
 import "react-dates/lib/css/_datepicker.css";
 import "normalize.css/normalize.css";
-import "./styles/styles.scss"
+import "./styles/styles.scss";
+import "./firebase/firebase";
 
 const store = configureStore();
 store.dispatch(addExpense({
   description: "Water Bill",
-  amount: 4500
+  amount: 4500,
+  id: "1"
 }));
 
 store.dispatch(addExpense({
   description: "Gas Bill",
-  createdAt: 1000
+  createdAt: 1000,
+  id: "2"
 }));
 
 store.dispatch(addExpense({
   description: "Rent",
-  amount: 109500
+  amount: 109500,
+  id: "3"
 }));
 
 

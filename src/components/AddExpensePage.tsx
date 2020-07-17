@@ -1,14 +1,14 @@
 import React from "react";
 import ExpenseForm from "./ExpenseForm";
 import { connect } from "react-redux";
-import { UpdateExpenseType } from "../@types/expenseTypes";
+import { Expense } from "../@types/expenseTypes";
 import { Props } from "../@types/rootState";
-import { addExpense } from "../actions/expenses";
+import { startAddExpense } from "../actions/expenses";
 import { Dispatch } from "redux";
 
 export class AddExpensePage extends React.Component<Props & DispatchProps> {
-  onSubmit = (expense: UpdateExpenseType) => {
-    this.props.addExpense(expense);
+  onSubmit = (expense: Expense) => {
+    this.props.startAddExpense(expense);
     this.props.history.push("/");
   };
 
@@ -25,11 +25,11 @@ export class AddExpensePage extends React.Component<Props & DispatchProps> {
 }
 
 interface DispatchProps {
-  addExpense: (expense: UpdateExpenseType) => void
+  startAddExpense: (expense: Expense) => void
 }
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  addExpense: (expense: UpdateExpenseType) => dispatch(addExpense(expense))
+  startAddExpense: (expense: Expense) => dispatch(startAddExpense(expense))
 });
 
 export default connect(undefined, mapDispatchToProps)(AddExpensePage);

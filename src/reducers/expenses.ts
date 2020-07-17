@@ -1,9 +1,9 @@
-import { ExepenseItemType, ADD_EXPENSE, REMOVE_EXPENSE, EDIT_EXPENSE, ExpenseActionTypes } from "../@types/expenseTypes";
+import { ADD_EXPENSE, REMOVE_EXPENSE, EDIT_EXPENSE, ExpenseActionTypes, Expense } from "../@types/expenseTypes";
 
-const expensesDefaultState = [] as ExepenseItemType[];
+const expensesDefaultState = [] as Expense[];
 
 // Expenses Reducer
-export default (state: ExepenseItemType[] = expensesDefaultState, action: ExpenseActionTypes): ExepenseItemType[] => {
+export default (state: Expense[] = expensesDefaultState, action: ExpenseActionTypes): Expense[] => {
   switch (action.type) {
     case ADD_EXPENSE:
       return [...state, action.expense];

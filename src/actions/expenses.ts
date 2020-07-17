@@ -1,22 +1,51 @@
 import { v4 as uuidv4 } from 'uuid';
-import { AddExpenseAction, ADD_EXPENSE, 
-         RemoveExpenseAction, REMOVE_EXPENSE, 
-         EditExpenseAction, EDIT_EXPENSE, UpdateExpenseType } from '../@types/expenseTypes';
+import {
+  AddExpenseAction, ADD_EXPENSE,
+  RemoveExpenseAction, REMOVE_EXPENSE,
+  EditExpenseAction, EDIT_EXPENSE, Expense
+} from '../@types/expenseTypes';
+import database from "../firebase/firebase";
+
+// Component calls action generator
+// Generator returns a function
+// Component dispatches the returned function
+// Function runs (the function has the ability to dispatch other actions and do whatever it wants)
 
 // Expense Actions
 // ADD_EXPENSE
-export const addExpense = ({ description = "", note = "", amount = 0, createdAt = 0 }): AddExpenseAction => (
+export const addExpense = (expense: Expense ): AddExpenseAction => (
   {
     type: ADD_EXPENSE,
-    expense: {
-      id: uuidv4(),
+    expense
+  }
+);
+
+export const startAddExpense = (expenseData: Expense): any => {
+  return (dispatch: any) => {
+    const {
+      description = "",
+      note = "",
+      amount = 0,
+      createdAt = 0
+    } = expenseData;
+
+    const expense: Expense = {
       description,
       note,
       amount,
       createdAt
-    }
+    };
+
+    return database.ref("expenses")
+      .push(expense)
+      .then((ref) =>
+        dispatch(addExpense({
+          id: ref.key,
+          ...expense
+        }))
+      )
   }
-);
+};
 
 // REMOVE_EXPENSE
 export const removeExpense = ({ id }: { id: string }): RemoveExpenseAction => (
@@ -27,7 +56,7 @@ export const removeExpense = ({ id }: { id: string }): RemoveExpenseAction => (
 );
 
 // EDIT_EXPENSE
-export const editExpense = ({ id, updates }: { id: string, updates: UpdateExpenseType }): EditExpenseAction => (
+export const editExpense = ({ id, updates }: { id: string, updates: Expense }): EditExpenseAction => (
   {
     type: EDIT_EXPENSE,
     id,

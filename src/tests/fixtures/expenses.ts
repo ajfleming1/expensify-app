@@ -1,7 +1,7 @@
-import { ExepenseItemType } from "../../@types/expenseTypes";
+import { Expense } from "../../@types/expenseTypes";
 import moment from "moment";
 
-const expenses: ExepenseItemType[] = [
+const expenses: Expense[] = [
     {
       id: "1",
       description: "Gum",

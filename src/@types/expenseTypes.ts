@@ -1,14 +1,5 @@
-// ExepenseItemType
-export type ExepenseItemType = {
-  id: string;
-  description: string;
-  note: string;
-  amount: number;
-  createdAt: number;
-};
-
-// UpdateExpenseType
-export type UpdateExpenseType = {
+export type Expense = {
+  id?: string;
   description?: string;
   amount?: number;
   note?: string;
@@ -23,7 +14,7 @@ export type ExpenseActionTypes = AddExpenseAction | RemoveExpenseAction | EditEx
 export const ADD_EXPENSE = "ADD_EXPENSE";
 export type AddExpenseAction = {
   type: typeof ADD_EXPENSE;
-  expense: ExepenseItemType;
+  expense: Expense;
 };
 
 // REMOVE_EXPENSE
@@ -38,7 +29,7 @@ export const EDIT_EXPENSE = "EDIT_EXPENSE";
 export type EditExpenseAction = {
   type: typeof EDIT_EXPENSE;
   id: string;
-  updates: UpdateExpenseType;
+  updates: Expense;
 };
 
 type InitActionType = {

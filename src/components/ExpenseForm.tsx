@@ -3,9 +3,9 @@ import moment, { Moment } from "moment";
 import { SingleDatePicker } from "react-dates";
 import { v4 as uuid } from 'uuid';
 import 'react-dates/initialize';
-import { UpdateExpenseType, ExepenseItemType } from "../@types/expenseTypes";
+import { Expense } from "../@types/expenseTypes";
 
-class ExpenseForm extends React.Component<{ expense?: ExepenseItemType, onSubmit: (expense: UpdateExpenseType) => void }> {
+class ExpenseForm extends React.Component<{ expense?: Expense, onSubmit: (expense: Expense) => void }> {
   state = {} as {
     description: string,
     note: string,
@@ -15,7 +15,7 @@ class ExpenseForm extends React.Component<{ expense?: ExepenseItemType, onSubmit
     error: string
   };
 
-  constructor(props: { expense: ExepenseItemType; onSubmit: (expense: UpdateExpenseType) => void; }) {
+  constructor(props: { expense: Expense; onSubmit: (expense: Expense) => void; }) {
     super(props);
     this.state = {
       description: props.expense ? props.expense.description : "",
