@@ -13,7 +13,7 @@ import database from "../firebase/firebase";
 
 // Expense Actions
 // ADD_EXPENSE
-export const addExpense = (expense: Expense ): AddExpenseAction => (
+export const addExpense = (expense: Expense): AddExpenseAction => (
   {
     type: ADD_EXPENSE,
     expense
@@ -71,6 +71,22 @@ export const setExpenses = (expenses: Expense[]) => ({
 });
 
 // START_SET_EXPENSES -- async action
-// export const startSetExpenses = () => (
+export const startSetExpenses = (): any => {
+  // 1. Fetch all expense data
+  // 2. Parse all data into array (firebase.ts)
+  // 3. Dispatch setExpenses
+  return (dispatch: any) => {
+    return database.ref("expenses")
+      .once("value").then((snapshot) => {
+        const expenses: Expense[] = [];
+        snapshot.forEach((childSnapshot) => {
+          expenses.push({
+            id: childSnapshot.key,
+            ...childSnapshot.val()
+          });
+        });
 
-// );
+        dispatch(setExpenses(expenses));
+      });
+  }
+};
