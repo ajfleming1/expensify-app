@@ -3,37 +3,12 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import AppRouter from "./routers/AppRouter";
 import configureStore from "./store/configureStore";
-import { addExpense } from "./actions/expenses";
 import "react-dates/lib/css/_datepicker.css";
 import "normalize.css/normalize.css";
 import "./styles/styles.scss";
 import "./firebase/firebase";
 
 const store = configureStore();
-store.dispatch(addExpense({
-  description: "Water Bill",
-  amount: 4500,
-  id: "1"
-}));
-
-store.dispatch(addExpense({
-  description: "Gas Bill",
-  createdAt: 1000,
-  id: "2"
-}));
-
-store.dispatch(addExpense({
-  description: "Rent",
-  amount: 109500,
-  id: "3"
-}));
-
-
-//const state = store.getState();
-// const visibleExpenses = getVisibleExpenses(state.expenses, state.filters);
-
-// console.log(visibleExpenses);
-
 const tsx =
   <Provider store={store}>
     <AppRouter />

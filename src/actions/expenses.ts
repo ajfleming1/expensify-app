@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import {
   AddExpenseAction, ADD_EXPENSE,
   RemoveExpenseAction, REMOVE_EXPENSE,
-  EditExpenseAction, EDIT_EXPENSE, Expense
+  EditExpenseAction, EDIT_EXPENSE, Expense, SET_EXPENSES
 } from '../@types/expenseTypes';
 import database from "../firebase/firebase";
 
@@ -63,3 +63,14 @@ export const editExpense = ({ id, updates }: { id: string, updates: Expense }): 
     updates
   }
 );
+
+// SET_EXPENSES
+export const setExpenses = (expenses: Expense[]) => ({
+  type: SET_EXPENSES,
+  expenses
+});
+
+// START_SET_EXPENSES -- async action
+// export const startSetExpenses = () => (
+
+// );

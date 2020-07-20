@@ -1,4 +1,4 @@
-import { ADD_EXPENSE, REMOVE_EXPENSE, EDIT_EXPENSE, ExpenseActionTypes, Expense } from "../@types/expenseTypes";
+import { ADD_EXPENSE, REMOVE_EXPENSE, EDIT_EXPENSE, ExpenseActionTypes, Expense, SET_EXPENSES } from "../@types/expenseTypes";
 
 const expensesDefaultState = [] as Expense[];
 
@@ -20,6 +20,8 @@ export default (state: Expense[] = expensesDefaultState, action: ExpenseActionTy
           return expense;
         }
       });
+    case SET_EXPENSES:
+      return action.expenses;
     default: return state;
   }
 };

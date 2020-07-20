@@ -6,9 +6,20 @@ export type Expense = {
   createdAt?: number;
 };
 
+export type FirebaseExpenseType = {
+  [id: string]: {
+    description: string,
+    note: string,
+    amount: number,
+    createdAt: number
+  }
+};
+
 // Actions
 // Action Types
-export type ExpenseActionTypes = AddExpenseAction | RemoveExpenseAction | EditExpenseAction | InitActionType;
+export type ExpenseActionTypes = AddExpenseAction | RemoveExpenseAction | 
+                                 EditExpenseAction | InitActionType |
+                                 SetExpenseAction;
 
 // ADD_EXPENSE
 export const ADD_EXPENSE = "ADD_EXPENSE";
@@ -35,3 +46,10 @@ export type EditExpenseAction = {
 type InitActionType = {
   type: "@@INIT"
 }
+
+// SET_EXPENSES
+export const SET_EXPENSES = "SET_EXPENSES";
+export type SetExpenseAction = {
+  type: typeof SET_EXPENSES,
+  expenses: Expense[]
+};

@@ -1,5 +1,5 @@
 import expensesReducer from "../../reducers/expenses";
-import { RemoveExpenseAction, REMOVE_EXPENSE, AddExpenseAction, ADD_EXPENSE, Expense, EditExpenseAction, EDIT_EXPENSE } from "../../@types/expenseTypes";
+import { RemoveExpenseAction, REMOVE_EXPENSE, AddExpenseAction, ADD_EXPENSE, Expense, EditExpenseAction, EDIT_EXPENSE, SetExpenseAction, SET_EXPENSES } from "../../@types/expenseTypes";
 import expenses from "../fixtures/expenses";
 
 test("should set default state", () => {
@@ -75,4 +75,14 @@ test("shoud not edit an expense when id is not found", () => {
     };
     const state = expensesReducer(expenses, action);
     expect(state).toEqual(expenses);
+});
+
+test("should set expenses", () => {  
+    const action: SetExpenseAction = {
+        type: SET_EXPENSES,
+        expenses: [expenses[1]]
+    };
+
+    const state = expensesReducer(expenses, action);
+    expect(state).toEqual([expenses[1]]);
 });
