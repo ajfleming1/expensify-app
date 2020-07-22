@@ -4,7 +4,7 @@ import { RootState } from "../@types/rootState";
 import { EditExpenseAction, RemoveExpenseAction, Expense } from "../@types/expenseTypes";
 import { connect } from "react-redux";
 import ExpenseForm from "./ExpenseForm";
-import { editExpense, startRemoveExpense } from "../actions/expenses";
+import { startEditExpense, startRemoveExpense } from "../actions/expenses";
 import { withRouter } from "react-router-dom";
 import { History, LocationState } from "history";
 type IdParams = { id: string, expense: string };
@@ -23,7 +23,7 @@ export class EditExpensePage extends React.Component<{
   onSubmit = (expense: Expense) => {
     // Dispatch the action to edit the expense
     // Redirect to the dashboard
-    this.props.editExpense({ id: this.props.expense.id, updates: expense });
+    this.props.startEditExpense({ id: this.props.expense.id, updates: expense });
     this.props.history.push("/");
   };
   startRemoveExpense = (e: any) => {
@@ -45,12 +45,12 @@ export class EditExpensePage extends React.Component<{
 };
 
 interface DispatchProps {
-  editExpense({ id, updates }: { id: string; updates: Expense }): EditExpenseAction,
+  startEditExpense({ id, updates }: { id: string; updates: Expense }): EditExpenseAction,
   startRemoveExpense({ id }: { id: string }): RemoveExpenseAction
 }
 
 const mapDispatchToProps = (dispatch: (arg0: { type: "EDIT_EXPENSE" | "REMOVE_EXPENSE"; id: string; updates?: Expense; }) => any) => ({
-  editExpense: ({ id, updates }: { id: string; updates: Expense; }) => dispatch(editExpense({ id, updates })),
+  startEditExpense: ({ id, updates }: { id: string; updates: Expense; }) => dispatch(startEditExpense({ id, updates })),
   startRemoveExpense: ({ id }: { id: string }) => dispatch(startRemoveExpense({ id }))
 });
 

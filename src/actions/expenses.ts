@@ -1,8 +1,12 @@
-import { v4 as uuidv4 } from 'uuid';
 import {
-  AddExpenseAction, ADD_EXPENSE,
-  RemoveExpenseAction, REMOVE_EXPENSE,
-  EditExpenseAction, EDIT_EXPENSE, Expense, SET_EXPENSES
+  Expense,
+  AddExpenseAction,
+  EditExpenseAction,
+  RemoveExpenseAction,
+  ADD_EXPENSE,
+  EDIT_EXPENSE,
+  REMOVE_EXPENSE,
+  SET_EXPENSES
 } from '../@types/expenseTypes';
 import database from "../firebase/firebase";
 
@@ -20,6 +24,7 @@ export const addExpense = (expense: Expense): AddExpenseAction => (
   }
 );
 
+// START_ADD_EXPENSE
 export const startAddExpense = (expenseData: Expense): any => {
   return (dispatch: any) => {
     const {
@@ -59,7 +64,7 @@ export const removeExpense = ({ id }: { id: string }): RemoveExpenseAction => (
 export const startRemoveExpense = ({ id }: { id: string }): any => {
   return (dispatch: any) => {
     return database.ref(`expenses/${id}`).remove()
-                   .then(dispatch(removeExpense({ id })));
+      .then(dispatch(removeExpense({ id })));
   }
 };
 
@@ -71,6 +76,19 @@ export const editExpense = ({ id, updates }: { id: string, updates: Expense }): 
     updates
   }
 );
+
+// START_EDIT_EXPENSE
+export const startEditExpense = ({ id, updates }: { id: string, updates: Expense }): any => {
+  // 1. Fetch expense data
+  // 2. Call update with update object
+  // 3. Dispatch editExpense
+  return (dispatch: any) => {
+    return database
+      .ref(`expenses/${id}`)
+      .update({ ...updates })
+      .then(() => dispatch(editExpense({ id, updates })));
+  };
+};
 
 // SET_EXPENSES
 export const setExpenses = (expenses: Expense[]) => ({
