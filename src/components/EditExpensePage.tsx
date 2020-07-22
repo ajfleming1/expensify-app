@@ -4,7 +4,7 @@ import { RootState } from "../@types/rootState";
 import { EditExpenseAction, RemoveExpenseAction, Expense } from "../@types/expenseTypes";
 import { connect } from "react-redux";
 import ExpenseForm from "./ExpenseForm";
-import { editExpense, removeExpense, addExpense } from "../actions/expenses";
+import { editExpense, startRemoveExpense } from "../actions/expenses";
 import { withRouter } from "react-router-dom";
 import { History, LocationState } from "history";
 type IdParams = { id: string, expense: string };
@@ -26,8 +26,8 @@ export class EditExpensePage extends React.Component<{
     this.props.editExpense({ id: this.props.expense.id, updates: expense });
     this.props.history.push("/");
   };
-  removeExpense = (e: any) => {
-    this.props.removeExpense({ id: this.props.expense.id });
+  startRemoveExpense = (e: any) => {
+    this.props.startRemoveExpense({ id: this.props.expense.id });
     this.props.history.push("/");
   }
 
@@ -38,7 +38,7 @@ export class EditExpensePage extends React.Component<{
           expense={this.props.expense}
           onSubmit={this.onSubmit}
         />
-        <button onClick={this.removeExpense}>Remove</button>
+        <button onClick={this.startRemoveExpense}>Remove</button>
       </div>
     );
   }
@@ -46,12 +46,12 @@ export class EditExpensePage extends React.Component<{
 
 interface DispatchProps {
   editExpense({ id, updates }: { id: string; updates: Expense }): EditExpenseAction,
-  removeExpense({ id }: { id: string }): RemoveExpenseAction
+  startRemoveExpense({ id }: { id: string }): RemoveExpenseAction
 }
 
 const mapDispatchToProps = (dispatch: (arg0: { type: "EDIT_EXPENSE" | "REMOVE_EXPENSE"; id: string; updates?: Expense; }) => any) => ({
   editExpense: ({ id, updates }: { id: string; updates: Expense; }) => dispatch(editExpense({ id, updates })),
-  removeExpense: ({ id }: { id: string }) => dispatch(removeExpense({ id }))
+  startRemoveExpense: ({ id }: { id: string }) => dispatch(startRemoveExpense({ id }))
 });
 
 const mapStateToProps = (state: RootState, props: RouteComponentProps<IdParams>) => (

@@ -8,16 +8,16 @@ import { getMockRouterProps } from "../__mocks__/getMockRouterProps";
 let wrapper: ShallowWrapper<any, Readonly<{}>, Component<{}, {}, any>>;
 let history;
 let editExpense: jest.Mock<any, any>;
-let removeExpense: jest.Mock<any, any>;
+let startRemoveExpense: jest.Mock<any, any>;
 beforeEach(() => {
   editExpense = jest.fn();
-  removeExpense = jest.fn();
+  startRemoveExpense = jest.fn();
   history = getMockRouterProps<EditExpensePage>(null).history;
   wrapper = shallow(
     <EditExpensePage
       history={history}
       editExpense={editExpense}
-      removeExpense={removeExpense}
+      startRemoveExpense={startRemoveExpense}
       expense={expenses[2]}
     />);
 });
@@ -32,8 +32,8 @@ test("should handle editExpense", () => {
   expect(editExpense).toHaveBeenLastCalledWith({ id: expenses[2].id, updates: expenses[2] });
 });
 
-test("should handle removeExpese", () => {
+test("should handle startRemoveExpense", () => {
   wrapper.find("button").simulate("click");
   expect(history.push).toHaveBeenLastCalledWith("/");
-  expect(removeExpense).toHaveBeenLastCalledWith({ id: expenses[2].id });
+  expect(startRemoveExpense).toHaveBeenLastCalledWith({ id: expenses[2].id });
 });
