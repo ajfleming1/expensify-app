@@ -3,12 +3,20 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { startSetExpenses } from "./actions/expenses";
 
-import AppRouter from "./routers/AppRouter";
+import AppRouter, { history } from "./routers/AppRouter";
 import configureStore from "./store/configureStore";
 import "react-dates/lib/css/_datepicker.css";
 import "normalize.css/normalize.css";
 import "./styles/styles.scss";
 import { firebase } from "./firebase/firebase";
+
+let hasRendered = false;
+const renderApp = () => {
+  if(!hasRendered) {
+    ReactDOM.render(tsx, document.getElementById("appRoot"));
+    hasRendered = true;
+  }
+};
 
 const store = configureStore();
 const tsx =
@@ -19,15 +27,17 @@ const tsx =
 
 ReactDOM.render(<p>Loading...</p>, document.getElementById("appRoot"));
 
-store.dispatch(startSetExpenses()).then(() => {
-  ReactDOM.render(tsx, document.getElementById("appRoot"));
-});
-
 firebase.auth().onAuthStateChanged((user) => {
   if (user) {
-    console.log("Logged in");
+    store.dispatch(startSetExpenses()).then(() => {
+      renderApp();
+      if(history.location.pathname == "/") {
+        history.push("/dashboard");
+      }
+    });
   }
   else {
-    console.log("Logged out");
+    renderApp();
+    history.push("/");
   }
 });
