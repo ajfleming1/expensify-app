@@ -20,7 +20,7 @@ export type FirebaseExpenseType = {
 export type ExpenseActionTypes = AddExpenseAction | RemoveExpenseAction | 
                                  EditExpenseAction | InitActionType |
                                  SetExpenseAction;
-
+                                 
 // ADD_EXPENSE
 export const ADD_EXPENSE = "ADD_EXPENSE";
 export type AddExpenseAction = {

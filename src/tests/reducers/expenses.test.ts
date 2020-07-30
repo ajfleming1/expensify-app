@@ -60,7 +60,7 @@ test("should edit an expense", () => {
     expect(state[0]).toEqual({ ...updates, id: "1" });
 })
 
-test("shoud not edit an expense when id is not found", () => {
+test("should not edit an expense when id is not found", () => {
     var updates: Expense = {
         amount: expenses[0].amount + 1,
         createdAt: expenses[0].createdAt + 1,
