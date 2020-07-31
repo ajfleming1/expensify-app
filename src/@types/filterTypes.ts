@@ -33,6 +33,6 @@ export type FiltersType = {
   endDate: Moment
 };
 
-// FilterActionTypes
+// FilterActionTypes -- TODO Rename to FilterSortActionTypes
 export type FilterActionTypes = SetTextFilterAction | SortByDateFilterAction | SortByAmountFilterAction |
   SetStartDateFilterAction | SetEndDateFilterAction | { type: "@@INIT" };
