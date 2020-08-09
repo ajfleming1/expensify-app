@@ -3,21 +3,21 @@ import thunk from "redux-thunk";
 import database from "../../firebase/firebase";
 import {
     addExpense,
-    removeExpense,
-    editExpense,
     startAddExpense,
-    setExpenses,
-    startSetExpenses,
+    removeExpense,
     startRemoveExpense,
-    startEditExpense
+    editExpense,
+    startEditExpense,
+    setExpenses,
+    startSetExpenses
 } from "../../actions/expenses";
 import {
+    ADD_EXPENSE,
     REMOVE_EXPENSE,
     EDIT_EXPENSE,
-    ADD_EXPENSE,
+    SET_EXPENSES,
     Expense,
-    FirebaseExpenseType,
-    SET_EXPENSES
+    FirebaseExpenseType
 } from "../../@types/expenseTypes";
 import expenses from "../fixtures/expenses";
 
