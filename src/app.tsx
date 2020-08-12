@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { login, logout } from "./actions/auth";
 import { startSetExpenses } from "./actions/expenses";
+import LoadingPage from "./components/LoadingPage";
 import AppRouter, { history } from "./routers/AppRouter";
 import configureStore from "./store/configureStore";
 import "react-dates/lib/css/_datepicker.css";
@@ -25,7 +26,7 @@ const tsx =
   </Provider>
 
 
-ReactDOM.render(<p>Loading...</p>, document.getElementById("appRoot"));
+ReactDOM.render(<LoadingPage />, document.getElementById("appRoot"));
 
 firebase.auth().onAuthStateChanged((user) => {
   if (user) {

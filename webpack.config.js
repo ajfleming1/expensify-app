@@ -16,7 +16,7 @@ module.exports = (env) => {
   const CSSExtract = new ExtractTextPlugin("styles.css");
 
   return ({
-    entry: './src/app.tsx',
+    entry: ['babel-polyfill','./src/app.tsx'],
     output: {
       filename: 'main.js',
       path: path.resolve(__dirname, 'public/dist')

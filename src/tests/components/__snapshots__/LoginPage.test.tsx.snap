@@ -10,15 +10,16 @@ exports[`should render login page correctly 1`] = `
     <h1
       className="box-layout__title"
     >
-      Expensify App
+      Expensify
     </h1>
     <p>
       Its time to get your expenses under control.
     </p>
     <button
+      className="button"
       onClick={[Function]}
     >
-      Login
+      Login with Google
     </button>
   </div>
 </div>
