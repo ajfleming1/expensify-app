@@ -12,7 +12,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
     - name: Dependabot Issues
-      uses: dependabot/dependabot-core@0.167.x
+      uses: dependabot/dependabot-core@0.167
       with:
         args: "metadata --format=json"
       id: dependabot-issues
