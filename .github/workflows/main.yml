@@ -1,7 +1,9 @@
 name: Dependabot Issues
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
   dependabot-issues:
@@ -9,9 +11,11 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Get Dependabot Issues
+    - name: Dependabot Issues
+      uses: dependabot/dependabot-core@0.167.x
+      with:
+        args: "metadata --format=json"
+      id: dependabot-issues
+    - name: Print Issues
       run: |
-        dependabot issues list --format=json > issues.json
-    - name: Print Dependabot Issues
-      run: |
-        cat issues.json
+        echo "${{ steps.dependabot-issues.outputs.result }}" | jq '.[].title'
