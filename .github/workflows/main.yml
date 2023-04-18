@@ -1,21 +1,19 @@
-name: Dependabot Issues
+name: Dependabot Security Alerts
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
+
 jobs:
-  dependabot-issues:
+  dependabot-security-alerts:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Dependabot Issues
-      uses: dependabot/dependabot-core
+    - name: Dependabot Security Alerts
+      uses: dependabot/dependabot-core@0.167.x
       with:
-        args: "metadata --format=json"
-      id: dependabot-issues
-    - name: Print Issues
+        args: "security --format=json"
+      id: dependabot-security-alerts
+    - name: Print Security Alerts
       run: |
-        echo "${{ steps.dependabot-issues.outputs.result }}" | jq '.[].title'
+        echo "${{ steps.dependabot-security-alerts.outputs.result }}" | jq '.[].title'
