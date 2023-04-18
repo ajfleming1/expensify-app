@@ -1,69 +1,17 @@
-name: Dependabot Security Alerts
+name: Dependabot Issues
 
 on:
-  schedule:
-    - cron: '0 0 * * *'  # Run every day at midnight
   workflow_dispatch:
 
 jobs:
-  create-prs:
+  dependabot-issues:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
+    - name: Checkout
       uses: actions/checkout@v2
-
-    - name: Install Dependabot
-      run: npm install -g dependabot
-
-    - name: Get Dependabot alerts
-      id: dependabot
-      run: dependabot --version=2 --severity=critical,high,medium,low --format=json
-
-    - name: Create PRs for critical severity alerts
-      if: steps.dependabot.outputs.critical != '[]'
-      uses: peter-evans/create-pull-request@v3
-      with:
-        title: Update critical severity dependencies
-        commit-message: Update critical severity dependencies
-        branch: dependabot-critical-severity-${{ github.sha }}
-        body: |
-          The following critical severity security vulnerabilities were found by Dependabot:
-          ${{ steps.dependabot.outputs.critical }}
-        token: ${{ secrets.DEPENDABOT_PR }}
-
-    - name: Create PRs for high severity alerts
-      if: steps.dependabot.outputs.high != '[]'
-      uses: peter-evans/create-pull-request@v3
-      with:
-        title: Update high severity dependencies
-        commit-message: Update high severity dependencies
-        branch: dependabot-high-severity-${{ github.sha }}
-        body: |
-          The following high severity security vulnerabilities were found by Dependabot:
-          ${{ steps.dependabot.outputs.high }}
-        token: ${{ secrets.DEPENDABOT_PR }}
-
-    - name: Create PRs for medium severity alerts
-      if: steps.dependabot.outputs.medium != '[]'
-      uses: peter-evans/create-pull-request@v3
-      with:
-        title: Update medium severity dependencies
-        commit-message: Update medium severity dependencies
-        branch: dependabot-medium-severity-${{ github.sha }}
-        body: |
-          The following medium severity security vulnerabilities were found by Dependabot:
-          ${{ steps.dependabot.outputs.medium }}
-        token: ${{ secrets.DEPENDABOT_PR }}
-
-    - name: Create PRs for low severity alerts
-      if: steps.dependabot.outputs.low != '[]'
-      uses: peter-evans/create-pull-request@v3
-      with:
-        title: Update low severity dependencies
-        commit-message: Update low severity dependencies
-        branch: dependabot-low-severity-${{ github.sha }}
-        body: |
-          The following low severity security vulnerabilities were found by Dependabot:
-          ${{ steps.dependabot.outputs.low }}
-        token: ${{ secrets.DEPENDABOT_PR }}
+    - name: Get Dependabot Issues
+      run: |
+        dependabot issues list --format=json > issues.json
+    - name: Print Dependabot Issues
+      run: |
+        cat issues.json
