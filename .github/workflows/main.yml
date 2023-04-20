@@ -2,15 +2,27 @@ name: Dependabot Security Alerts
 
 on:
   workflow_dispatch:
-
+  
 jobs:
-  list-security-alerts:
+  dependabot-alerts:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: List Security Alerts
-      run: |
-        curl -s -H "Authorization: Bearer ${{ secrets.DEPENDABOT_PR }}" \
-        "https://api.github.com/repos/${{ github.repository }}/security/alerts" \
-        | jq -r '.[] | [.affected_package_name, .affected_range, .severity] | @csv'
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2.4.0
+        with:
+          node-version: '14.x'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Dependabot security check
+        uses: dependabot/github-actions@v2.2.2
+        with:
+          directory: '.'
+
+      - name: Print Dependabot alerts
+        run: |
+          python3 -c "import json;print(json.dumps(${{ toJson(steps.dependabot-alerts.outputs.alerts) }}))"
