@@ -50,7 +50,7 @@
     "firebase": "^7.15.5",
     "html-webpack-plugin": "^4.3.0",
     "moment": "^2.26.0",
-    "node-sass": "^4.14.1",
+    "node-sass": "^7.0.0",
     "normalize.css": "^8.0.1",
     "numeral": "^2.0.6",
     "raf": "^3.4.1",
