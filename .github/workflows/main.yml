@@ -12,12 +12,18 @@ jobs:
           curl -H "Authorization: Bearer ${{ secrets.DEPENDABOT_PR }}" \
           -H "Accept: application/vnd.github.v3+json" \
           https://api.github.com/repos/${{ github.repository }}/pulls?state=open | \
-          jq '[.[] | select(.user.login == "dependabot[bot]") | {created_at, severity: .labels[] | select(.name | startswith("dependabot/")) | .name}] | group_by(.severity) | map({severity: .[0].severity, count: length, months: [.[] | {month: .created_at | strptime("%Y-%m-%dT%H:%M:%SZ") | todate | strftime("%Y-%m"), count: 1}] | group_by(.month)}) | map({severity: .severity, count: .count, months: [.[] | {month: .[0].month, count: . | length}]})' \
+          jq '[.[] | select(.user.login == "dependabot[bot]") | {number, created_at, severity: .labels[] | select(.name | startswith("dependabot/")) | .name}] | group_by(.severity) | map({severity: .[0].severity, pulls: [.[] | {number, month: .created_at | strptime("%Y-%m-%dT%H:%M:%SZ") | todate | strftime("%Y-%m"), changes: []}] | group_by(.month)}) | .[] | .pulls[] | select(length > 0) | .changes |= (reduce .[] as $item ([]; . + [$item.number])) | {severity: .severity, month: .month, changes: .changes}' \
           > dependabot_pulls.json
         env:
           GITHUB_TOKEN: ${{ secrets.DEPENDABOT_PR }}
-      - name: Upload Results
-        uses: actions/upload-artifact@v2
-        with:
-          name: Dependabot Pulls
-          path: dependabot_pulls.json
+      - name: Create Pull Requests
+        run: |
+          cat dependabot_pulls.json | jq -c '. | {title: "Dependabot Updates for \(.month) (\(.severity))", body: "This PR contains updates from Dependabot for \(.month) with severity \(.severity).", head: "dependabot_updates/\(.month)_\(.severity)", base: "master"}' | \
+          while read -r pr_data; do \
+            curl -H "Authorization: Bearer ${{ secrets.DEPENDABOT_PR }}" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -d "$pr_data" \
+            https://api.github.com/repos/${{ github.repository }}/pulls ; \
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.DEPENDABOT_PR }}
