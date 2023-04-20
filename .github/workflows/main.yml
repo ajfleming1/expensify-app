@@ -4,25 +4,16 @@ on:
   workflow_dispatch:
   
 jobs:
-  dependabot-alerts:
+  process-dependabot-pulls:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v2
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v2.4.0
-        with:
-          node-version: '14.x'
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Dependabot security check
-        uses: dependabot/github-actions@v2.2.2
-        with:
-          directory: '.'
-
-      - name: Print Dependabot alerts
+      - name: Process Pull Requests
+        if: github.event.pull_request.user.login == 'dependabot[bot]'
         run: |
-          python3 -c "import json;print(json.dumps(${{ toJson(steps.dependabot-alerts.outputs.alerts) }}))"
+          curl -H "Authorization: Bearer ${{ secrets.DEPENDABOT_PR }}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/${{ github.repository }}/pulls?state=open | \
+          jq '[.[] | select(.user.login == "dependabot[bot]") | {created_at, severity: .labels[] | select(.name | startswith("dependabot/")) | .name}] | group_by(.severity) | map({severity: .[0].severity, count: length, months: [.[] | {month: .created_at | strptime("%Y-%m-%dT%H:%M:%SZ") | todate | strftime("%Y-%m"), count: 1}] | group_by(.month)}) | map({severity: .severity, count: .count, months: [.[] | {month: .[0].month, count: . | length}]})' \
+          > dependabot_pulls.json
