@@ -95,7 +95,7 @@ jobs:
                      --header "Authorization: token $ACCESS_TOKEN" \
                      --header 'X-GitHub-Api-Version: 2022-11-28' \
                      --header 'Content-Type: application/json' \
-                     --data-raw "{ \"ref\": \"$REF\", \"sha\": \"$SHA\" }" >> "$LOG_FILE"
+                     --data-raw "{ \"ref\": \"$REF\", \"sha\": \"$SHA\" }" 
                     
                     sleep $SLEEP_TIME
 
@@ -112,7 +112,7 @@ jobs:
                               \"head\": \"$REF\",
                               \"base\": \"master\",
                               \"body\": \"$BODY\"
-                            }" >> "$LOG_FILE"
+                            }" 
                     
                     sleep $SLEEP_TIME	    
 
@@ -123,7 +123,7 @@ jobs:
                      --header "Authorization: token $ACCESS_TOKEN" \
                      --header 'X-GitHub-Api-Version: 2022-11-28' \
                      --header 'Content-Type: application/json' \
-                     --data-raw "{ \"ref\": \"$REF\", \"sha\": \"$SHA\" }" >> "$LOG_FILE"
+                     --data-raw "{ \"ref\": \"$REF\", \"sha\": \"$SHA\" }" 
                     
                     sleep $SLEEP_TIME
                     is_first=false
@@ -136,7 +136,7 @@ jobs:
                      --header "Accept: application/vnd.github+json" \
                      --header "Authorization: Bearer $ACCESS_TOKEN"\
                      --header "X-GitHub-Api-Version: 2022-11-28" \
-                     -d "{\"sha\":\"$SHA\",\"force\":true}" >> "$LOG_FILE"
+                     -d "{\"sha\":\"$SHA\",\"force\":true}" 
 
                     sleep $SLEEP_TIME
                     
@@ -160,7 +160,7 @@ jobs:
                     curl --location --request PUT "https://api.github.com/repos/$REPO_NAME/pulls/$PR_NUMBER/merge" \
                          --header "Accept: application/vnd.github+json" \
                          --header "Authorization: Bearer $ACCESS_TOKEN"\
-                         --header "X-GitHub-Api-Version: 2022-11-28" >> "$LOG_FILE"
+                         --header "X-GitHub-Api-Version: 2022-11-28" 
 
                     sleep $SLEEP_TIME  	    
                     fi
