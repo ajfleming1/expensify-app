@@ -15,6 +15,7 @@ jobs:
         uses: actions/checkout@v2
       - name: Create json
         run: |
+            echo "REPO_NAME $REPO_NAME"
             # Call GET /pulls and filter by dependabot[bot], save to pull.json
             curl -s -H "Authorization: token $ACCESS_TOKEN" "$API_ENDPOINT/repos/$REPO_NAME/pulls?per_page=100" | jq '.[] | select(.user.login == "dependabot[bot]")' > pull.json
             sleep $SLEEP_TIME
