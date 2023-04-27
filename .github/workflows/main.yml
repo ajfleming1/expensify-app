@@ -5,11 +5,11 @@ jobs:
   process-dependabot-pulls:
     runs-on: ubuntu-latest
     env:
-        API_ENDPOINT="https://api.github.com"
-        ACCESS_TOKEN=${{ secrets.DEPENDABOT_PR }}
-        REPO_NAME=${{ github.repository }}
-        SLEEP_TIME=1
-        LOG_FILE=log_$(date -u +'%Y-%m-%d_%H-%M-%S').log
+        API_ENDPOINT:"https://api.github.com"
+        ACCESS_TOKEN:${{ secrets.DEPENDABOT_PR }}
+        REPO_NAME:${{ github.repository }}
+        SLEEP_TIME:1
+        LOG_FILE:log_$(date -u +'%Y-%m-%d_%H-%M-%S').log
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
