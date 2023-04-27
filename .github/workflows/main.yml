@@ -19,9 +19,6 @@ jobs:
             curl -s -H "Authorization: token $ACCESS_TOKEN" "$API_ENDPOINT/repos/$REPO_NAME/pulls?per_page=100" | jq '.[] | select(.user.login == "dependabot[bot]")' > pull.json
             sleep $SLEEP_TIME
 
-            curl -s -H "Authorization: token $ACCESS_TOKEN" "$API_ENDPOINT/repos/$REPO_NAME/dependabot/alerts?per_page=100" | jq '[.[] | {name: .security_vulnerability.package.name, severity: .security_vulnerability.severity}]' > /mnt/c/Users/dfleming/Desktop/alerts.json
-            sleep $SLEEP_TIME
-
             # Call GET /dependabot/alerts and parse the JSON using jq
             curl -s -H "Authorization: token $ACCESS_TOKEN" "$API_ENDPOINT/repos/$REPO_NAME/dependabot/alerts?per_page=100" | jq '[.[] | {name: .security_vulnerability.package.name, severity: .security_vulnerability.severity}]' | while read -r data; do
               # Extract the name and severity values
