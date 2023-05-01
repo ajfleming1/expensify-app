@@ -133,7 +133,7 @@ jobs:
 
                 # Create top level PR
                 OLD_IFS=$IFS
-                IFS=,
+                IFS=', '
                 COMMA_DELIMITED_COMMITS="${COMMITS[*]}"
                 IFS=$OLD_IFS
 
