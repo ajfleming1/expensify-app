@@ -105,18 +105,6 @@ jobs:
                      --header "Authorization: Bearer $ACCESS_TOKEN"\
                      --header "X-GitHub-Api-Version: 2022-11-28" \
                      --data-raw "{\"sha\":\"$SHA\",\"force\":true}"
-
-                    sleep $SLEEP_TIME
-
-                    # Create PR from branch to top level pr
-                    PR_NUMBER=$(curl --location --request POST "https://api.github.com/repos/$REPO_NAME/pulls" \
-                     --header 'Accept: application/vnd.github+json' \
-                     --header "Authorization: token $ACCESS_TOKEN" \
-                     --header 'X-GitHub-Api-Version: 2022-11-28' \
-                     --header 'Content-Type: application/json' \
-                     --data-raw "{ \"title\": \"Merge $SHA into $TITLE\", \"head\": \"$REF\", \"base\": \"$BASE\" }")
-
-                    echo "$PR_NUMBER"
                     
                     sleep $SLEEP_TIME
 
