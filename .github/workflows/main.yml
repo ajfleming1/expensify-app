@@ -117,6 +117,8 @@ jobs:
                      --data-raw "{ \"title\": \"Merge $SHA into $TITLE\", \"head\": \"$REF\", \"base\": \"$BASE\" }")
 
                     echo "$PR_NUMBER"
+                    
+                    sleep $SLEEP_TIME
 
                     PR_NUMBER=$(curl --location --request POST "https://api.github.com/repos/$REPO_NAME/pulls" \
                      --header 'Accept: application/vnd.github+json' \
