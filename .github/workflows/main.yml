@@ -8,7 +8,7 @@ jobs:
         API_ENDPOINT: "https://api.github.com"
         ACCESS_TOKEN: ${{ secrets.DEPENDABOT_PR }}
         REPO_NAME: ${{ github.repository }}
-        SLEEP_TIME: 3
+        SLEEP_TIME: 5
         LOG_FILE: log_$(date -u +'%Y-%m-%d_%H-%M-%S').log
         TARGET_BRANCH: "master"
     steps:
@@ -109,6 +109,15 @@ jobs:
                     sleep $SLEEP_TIME
 
                     # Create PR from branch to top level pr
+                    PR_NUMBER=$(curl --location --request POST "https://api.github.com/repos/$REPO_NAME/pulls" \
+                     --header 'Accept: application/vnd.github+json' \
+                     --header "Authorization: token $ACCESS_TOKEN" \
+                     --header 'X-GitHub-Api-Version: 2022-11-28' \
+                     --header 'Content-Type: application/json' \
+                     --data-raw "{ \"title\": \"Merge $SHA into $TITLE\", \"head\": \"$REF\", \"base\": \"$BASE\" }")
+
+                    echo "$PR_NUMBER"
+
                     PR_NUMBER=$(curl --location --request POST "https://api.github.com/repos/$REPO_NAME/pulls" \
                      --header 'Accept: application/vnd.github+json' \
                      --header "Authorization: token $ACCESS_TOKEN" \
