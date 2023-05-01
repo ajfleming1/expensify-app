@@ -141,12 +141,9 @@ jobs:
                 done
 
                 # Create top level PR
-                # OLD_IFS=$IFS
-                # IFS=,
-                # COMMA_DELIMITED_COMMITS="${COMMITS[*]}"
-                # IFS=$OLD_IFS
-
-                TITLE="Merge pull requests for $SEVERITY issues."
+                COMMA_DELIMITED_COMMITS="${COMMITS[*]}"
+                
+                TITLE="Merge pull requests for $SEVERITY issues. Includes commits $COMMA_DELIMITED_COMMITS"
                 BODY="Merging pull requests ."
 
                 curl --location --request POST "https://api.github.com/repos/$REPO_NAME/pulls" \
