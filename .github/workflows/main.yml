@@ -135,7 +135,7 @@ jobs:
                   # Create top level PR
                   echo "*** Creating a top level PR from $BASE to $TARGET_BRANCH ***"
 
-                  TITLE="Merge pull requests for $SEVERITY issues."
+                  TITLE="AB#37 - Merge pull requests for $SEVERITY issues."
                   BODY=""
                   DATA="{ \"title\": \"$TITLE\", \"head\": \"$BASE\", \"base\": \"$TARGET_BRANCH\", \"body\": \"$BODY\" }";
 
