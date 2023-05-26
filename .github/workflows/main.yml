@@ -16,55 +16,55 @@ jobs:
         uses: actions/checkout@v2
       - name: Create json
         run: |
-            # Call GET /pulls and filter by dependabot[bot], save to pull.json
-            curl -s -H "Authorization: token $ACCESS_TOKEN" "$API_ENDPOINT/repos/$REPO_NAME/pulls?per_page=100" | jq '.[] | select(.user.login == "dependabot[bot]")' > pull.json
-            sleep $SLEEP_TIME
+              # Call GET /pulls and filter by dependabot[bot], save to pull.json
+              curl -s -H "Authorization: token $ACCESS_TOKEN" "$API_ENDPOINT/repos/$REPO_NAME/pulls?per_page=100" | jq '.[] | select(.user.login == "dependabot[bot]")' > pull.json
+              sleep $SLEEP_TIME
 
-            # Call GET /dependabot/alerts and parse the JSON using jq
-            curl -s -H "Authorization: token $ACCESS_TOKEN" "$API_ENDPOINT/repos/$REPO_NAME/dependabot/alerts?per_page=100" | jq '[.[] | {name: .security_vulnerability.package.name, severity: .security_vulnerability.severity}]' | while read -r data; do
-              # Extract the name and severity values
-              if [[ "$data" != \"name* && "$data" != \"severity* ]]; then
+              # Call GET /dependabot/alerts and parse the JSON using jq
+              curl -s -H "Authorization: token $ACCESS_TOKEN" "$API_ENDPOINT/repos/$REPO_NAME/dependabot/alerts?per_page=100" | jq '[.[] | {name: .security_vulnerability.package.name, severity: .security_vulnerability.severity}]' | while read -r data; do
+                  # Extract the name and severity values
+                  if [[ "$data" != \"name* && "$data" != \"severity* ]]; then
                 continue
-              fi
+                  fi
 
-              if echo "$data" | grep -q '"name":'; then
-                  name=$(echo "$data" | cut -d'"' -f4)
-              fi
+                  if echo "$data" | grep -q '"name":'; then
+                name=$(echo "$data" | cut -d'"' -f4)
+                  fi
 
-              if echo "$data" | grep -q '"severity":'; then
-                  severity=$(echo "$data" | cut -d'"' -f4)
-                  rx=$(echo "^Bump" $name".*")
+                  if echo "$data" | grep -q '"severity":'; then
+                severity=$(echo "$data" | cut -d'"' -f4)
+                rx=$(echo "^Bump" $name".*")
 
-                  # Search pull.json for a matching element and add the severity property
-                  jq --arg rx "$rx"  --arg name "$name" --arg severity "$severity" '. | select(.title | test($rx)) | .severity += $severity | {id: .id, number: .number, title: .title, package: $name, created_at: .created_at, updated_at: .updated_at, severity: .severity, html_url: .html_url}' pull.json > pull.tmp && cat pull.tmp >> dependabot_pulls_severity.json
-              fi
+                # Search pull.json for a matching element and add the severity property
+                jq --arg rx "$rx"  --arg name "$name" --arg severity "$severity" '. | select(.title | test($rx)) | .severity += $severity | {id: .id, number: .number, title: .title, package: $name, created_at: .created_at, updated_at: .updated_at, severity: .severity, html_url: .html_url}' pull.json > pull.tmp && cat pull.tmp >> dependabot_pulls_severity.json
+                  fi
 
-            done
-            sleep $SLEEP_TIME
+              done
+              sleep $SLEEP_TIME
 
-            jq -s '.' dependabot_pulls_severity.json > tmp && mv tmp dependabot_pulls_severity.json
+              jq -s '.' dependabot_pulls_severity.json > tmp && mv tmp dependabot_pulls_severity.json
 
       - name: Create Pull Requests
         run: |
-            PR_GROUPS=$(jq -c -r 'group_by(.severity) | map({severity: .[0].severity, pull_requests: .}) | sort_by(.severity)' dependabot_pulls_severity.json)
+              PR_GROUPS=$(jq -c -r 'group_by(.severity) | map({severity: .[0].severity, pull_requests: .}) | sort_by(.severity)' dependabot_pulls_severity.json)
 
-            IFS=$'\n'
-            for obj in $(echo "$PR_GROUPS" | jq -c '.[]'); do
-                is_first=true
+              IFS=$'\n'
+              for obj in $(echo "$PR_GROUPS" | jq -c '.[]'); do
+                  is_first=true
 
-                # Extract the severity, date, and pull requests for this group
-                SEVERITY=$(echo "$obj" | jq -r '.severity')
-                PULL_REQUESTS=$(echo "$obj" | jq -r '.pull_requests')
+                  # Extract the severity, date, and pull requests for this group
+                  SEVERITY=$(echo "$obj" | jq -r '.severity')
+                  PULL_REQUESTS=$(echo "$obj" | jq -r '.pull_requests')
 
-                echo "----------------"
-                echo "SEVERITY $SEVERITY"
+                  echo "----------------"
+                  echo "SEVERITY $SEVERITY"
 
-                # Initialize an empty array to hold the commit hashes for this group of pull requests
-                COMMITS=()
-                BASE=""
+                  # Initialize an empty array to hold the commit hashes for this group of pull requests
+                  COMMITS=()
+                  BASE=""
 
-                # Loop through the pull requests and get the commits for each one
-                for PR in $(echo "$PULL_REQUESTS" | jq -r '.[].number'); do
+                  # Loop through the pull requests and get the commits for each one
+                  for PR in $(echo "$PULL_REQUESTS" | jq -r '.[].number'); do
 
                 # Call the GitHub API to get the commits for the pull request
                 API_URL="https://api.github.com/repos/$REPO_NAME/pulls/$PR/commits"
@@ -73,77 +73,80 @@ jobs:
                 COMMITS+=($SHA)
 
                 if $is_first; then
-                    echo "First commit for $SEVERITY. Setting creating ref to initial commit $SHA."
+                    echo "First commit for $SEVERITY. Creating ref to initial commit $SHA."
                     REF="refs/heads/dependabot/dependabot-$SEVERITY-alerts"
                     BASE="$REF"
-                    curl --location --request POST "https://api.github.com/repos/$REPO_NAME/git/refs" \
-                     --header 'Accept: application/vnd.github+json' \
-                     --header "Authorization: token $ACCESS_TOKEN" \
-                     --header 'X-GitHub-Api-Version: 2022-11-28' \
-                     --header 'Content-Type: application/json' \
-                     --data-raw "{ \"ref\": \"$BASE\", \"sha\": \"$SHA\" }"
+                    curl -s --location --request POST "https://api.github.com/repos/$REPO_NAME/git/refs" \
+                   --header 'Accept: application/vnd.github+json' \
+                   --header "Authorization: token $ACCESS_TOKEN" \
+                   --header 'X-GitHub-Api-Version: 2022-11-28' \
+                   --header 'Content-Type: application/json' \
+                   --data-raw "{ \"ref\": \"$BASE\", \"sha\": \"$SHA\" }" >> $LOG_FILE
 
                     sleep $SLEEP_TIME
 
+                    echo "Creating tmp branch".
                     REF="refs/heads/dependabot/dependabot-tmp-alert-ref"
-                    curl --location --request POST "https://api.github.com/repos/$REPO_NAME/git/refs" \
-                     --header 'Accept: application/vnd.github+json' \
-                     --header "Authorization: token $ACCESS_TOKEN" \
-                     --header 'X-GitHub-Api-Version: 2022-11-28' \
-                     --header 'Content-Type: application/json' \
-                     --data-raw "{ \"ref\": \"$REF\", \"sha\": \"$SHA\" }"
+                    curl -s --location --request POST "https://api.github.com/repos/$REPO_NAME/git/refs" \
+                   --header 'Accept: application/vnd.github+json' \
+                   --header "Authorization: token $ACCESS_TOKEN" \
+                   --header 'X-GitHub-Api-Version: 2022-11-28' \
+                   --header 'Content-Type: application/json' \
+                   --data-raw "{ \"ref\": \"$REF\", \"sha\": \"$SHA\" }" >> $LOG_FILE
 
                     sleep $SLEEP_TIME
                     is_first=false
 
                 else
-                    echo "$SEVERITY has multiple commits: Updating $REF to $SHA and creating a PR toward $BASE."
+                    echo "$SEVERITY has multiple commits: Updating $REF to $SHA"
                     REF="refs/heads/dependabot/dependabot-tmp-alert-ref"
 
-                    curl --location --request PATCH "https://api.github.com/repos/$REPO_NAME/git/$REF" \
-                     --header "Accept: application/vnd.github+json" \
-                     --header "Authorization: Bearer $ACCESS_TOKEN"\
-                     --header "X-GitHub-Api-Version: 2022-11-28" \
-                     --data-raw "{\"sha\":\"$SHA\",\"force\":true}"
-                    
+                    curl -s --location --request PATCH "https://api.github.com/repos/$REPO_NAME/git/$REF" \
+                   --header "Accept: application/vnd.github+json" \
+                   --header "Authorization: Bearer $ACCESS_TOKEN"\
+                   --header "X-GitHub-Api-Version: 2022-11-28" \
+                   --data-raw "{\"sha\":\"$SHA\",\"force\":true}" >> $LOG_FILE
+
                     sleep $SLEEP_TIME
 
-                    PR_NUMBER=$(curl --location --request POST "https://api.github.com/repos/$REPO_NAME/pulls" \
-                     --header 'Accept: application/vnd.github+json' \
-                     --header "Authorization: token $ACCESS_TOKEN" \
-                     --header 'X-GitHub-Api-Version: 2022-11-28' \
-                     --header 'Content-Type: application/json' \
-                     --data-raw "{ \"title\": \"Merge $SHA into $TITLE\", \"head\": \"$REF\", \"base\": \"$BASE\" }" | jq -r '.number')
+                    echo "Creating a PR toward $BASE."
+                    PR_NUMBER=$(curl -s --location --request POST "https://api.github.com/repos/$REPO_NAME/pulls" \
+                         --header 'Accept: application/vnd.github+json' \
+                         --header "Authorization: token $ACCESS_TOKEN" \
+                         --header 'X-GitHub-Api-Version: 2022-11-28' \
+                         --header 'Content-Type: application/json' \
+                         --data-raw "{ \"title\": \"Merge $SHA into $BASE\", \"head\": \"$REF\", \"base\": \"$BASE\" }" | jq -r '.number')
 
                     sleep $SLEEP_TIME
 
                     if [ -n "$PR_NUMBER" ]; then
-                    echo "Merging PR $PR_NUMBER"
-                    # Merge PR
-                    curl --location --request PUT "https://api.github.com/repos/$REPO_NAME/pulls/$PR_NUMBER/merge" \
-                         --header "Accept: application/vnd.github+json" \
-                         --header "Authorization: Bearer $ACCESS_TOKEN"\
-                         --header "X-GitHub-Api-Version: 2022-11-28"
+                  echo "Merging PR $PR_NUMBER"
+                  # Merge PR
+                  curl -s --location --request PUT "https://api.github.com/repos/$REPO_NAME/pulls/$PR_NUMBER/merge" \
+                       --header "Accept: application/vnd.github+json" \
+                       --header "Authorization: Bearer $ACCESS_TOKEN"\
+                       --header "X-GitHub-Api-Version: 2022-11-28" >> $LOG_FILE
 
-                    sleep $SLEEP_TIME
+                  sleep $SLEEP_TIME
                     fi
                 fi
-                done
+                  done
 
-                # Create top level PR
-                COMMA_DELIMITED_COMMITS="${COMMITS[*]}"
-                
-                TITLE="AB#37 - Merge pull requests for $SEVERITY issues. Includes commits $COMMA_DELIMITED_COMMITS"
-                BODY="Merging pull requests ."
+                  # Create top level PR
+                  echo "*** Creating a top level PR from $BASE to $TARGET_BRANCH ***"
 
-                curl --location --request POST "https://api.github.com/repos/$REPO_NAME/pulls" \
-                    --header 'Accept: application/vnd.github+json' \
-                    --header "Authorization: token $ACCESS_TOKEN" \
-                    --header 'X-GitHub-Api-Version: 2022-11-28' \
-                    --header 'Content-Type: application/json' \
-                    --data-raw "{ \"title\": \"$TITLE\", \"head\": \"$BASE\", \"base\": \"$TARGET_BRANCH\", \"body\": \"$BODY\" }"
+                  TITLE="Merge pull requests for $SEVERITY issues."
+                  BODY=""
+                  DATA="{ \"title\": \"$TITLE\", \"head\": \"$BASE\", \"base\": \"$TARGET_BRANCH\", \"body\": \"$BODY\" }";
 
-                sleep $SLEEP_TIME
-                echo "----------------"
-            done
-            unset IFS
+                  curl -s --location --request POST "https://api.github.com/repos/$REPO_NAME/pulls" \
+                 --header 'Accept: application/vnd.github+json' \
+                 --header "Authorization: token $ACCESS_TOKEN" \
+                 --header 'X-GitHub-Api-Version: 2022-11-28' \
+                 --header 'Content-Type: application/json' \
+                 --data-raw "$DATA" >> $LOG_FILE
+
+                  sleep $SLEEP_TIME
+                  echo "----------------"
+              done
+              unset IFS
